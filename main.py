@@ -9,3 +9,7 @@ team1, team2 = Functions.get_teams_name()
 # Pass Flow
 # Functions.pass_flow(team1)
 # Functions.pass_flow(team2)
+
+# Pass Network
+# Functions.pass_network(team1)
+# Functions.pass_network(team2)
