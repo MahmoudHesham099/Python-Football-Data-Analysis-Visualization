@@ -50,3 +50,19 @@ def pass_arrows(team):
     plt.show()
 
 
+def pass_flow(team):
+    pass_df = get_pass_df(team)
+    # setup the pitch
+    pitch = Pitch(pitch_color='grass', line_color='white', line_zorder=2)
+    fig, ax = pitch.draw()
+    # plot the heatmap (darker color means more passes from that square)
+    bins = (6, 3)  # divide pitch to 6 columns and 3 rows
+    bins_heatmap = pitch.bin_statistic(pass_df.x, pass_df.y, statistic='count', bins=bins)
+    pitch.heatmap(bins_heatmap, ax=ax, cmap='Reds')
+    # plot the arrows pass flow
+    pitch.flow(
+        xstart=pass_df.x, ystart=pass_df.y, xend=pass_df.end_x, yend=pass_df.end_y,
+        ax=ax, color='black', arrow_type='same', arrow_length=5, bins=bins
+    )
+    ax.set_title(f'{team} Pass Flow Map')
+    plt.show()
