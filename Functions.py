@@ -1,6 +1,8 @@
 from mplsoccer import Pitch
 import matplotlib.pyplot as plt
 from mplsoccer.statsbomb import read_event, EVENT_SLUG
+import cmasher as cmr
+
 
 # get match dataframe
 MATCH_ID = '22912'
@@ -106,4 +108,24 @@ def pass_network(team):
         pitch.annotate(player_jersey_number, xy=(row.x, row.y), c='white', va='center', ha='center',
                        size=8, weight='bold', ax=ax)
     ax.set_title(f'{team} Pass Network')
+    plt.show()
+
+
+def get_pressure_df(team):
+    # boolean mask if the event is pressure and team is our team
+    team_pressure_mask = (event_df.type_name == 'Pressure') & (event_df.team_name == team)
+    # create a dataframe of the pressure only
+    pressure_df = event_df[team_pressure_mask]
+    return pressure_df
+
+
+def pressure_map(team):
+    pressure_df = get_pressure_df(team)
+    # setup the pitch
+    pitch = Pitch(line_zorder=2)
+    fig, ax = pitch.draw()
+    # plot the pressure
+    pitch.kdeplot(pressure_df.x, pressure_df.y, ax=ax, cmap=cmr.voltage_r, shade=True, levels=100)
+    # set the title
+    ax.set_title(f'{team} Pressure')
     plt.show()

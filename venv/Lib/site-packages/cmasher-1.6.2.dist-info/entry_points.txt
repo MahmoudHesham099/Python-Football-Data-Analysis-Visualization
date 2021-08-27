@@ -1,0 +1,3 @@
+[console_scripts]
+cmr = cmasher.cli_tools:main
+
