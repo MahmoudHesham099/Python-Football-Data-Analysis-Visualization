@@ -1,0 +1,126 @@
+Metadata-Version: 2.1
+Name: requests-cache
+Version: 0.7.4
+Summary: A transparent, persistent cache for the requests library
+Home-page: https://github.com/reclosedev/requests-cache
+License: BSD License
+Keywords: requests,cache,http,persistence,sqlite,redis,mongodb,gridfs,dynamodb
+Author: Roman Haritonov
+Requires-Python: >=3.6,<4.0
+Classifier: License :: Other/Proprietary License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Provides-Extra: all
+Provides-Extra: bson
+Provides-Extra: docs
+Provides-Extra: dynamodb
+Provides-Extra: json
+Provides-Extra: mongodb
+Provides-Extra: redis
+Provides-Extra: yaml
+Requires-Dist: Sphinx (==4.1.2); extra == "docs"
+Requires-Dist: attrs (>=21.2,<22.0)
+Requires-Dist: boto3 (<1.16); extra == "all" or extra == "dynamodb"
+Requires-Dist: botocore (<1.19); extra == "dynamodb"
+Requires-Dist: bson (>=0.5); extra == "bson"
+Requires-Dist: cattrs (>=1.7,<2.0); (python_version >= "3.7" and python_version < "4.0") and (extra == "all" or extra == "bson" or extra == "json" or extra == "yaml" or extra == "mongodb")
+Requires-Dist: furo (>=2021.6.24-beta.37); extra == "docs"
+Requires-Dist: itsdangerous (>=2.0.1)
+Requires-Dist: linkify-it-py (>=1.0.1,<2.0.0); extra == "docs"
+Requires-Dist: myst-parser (>=0.15.1,<0.16.0); extra == "docs"
+Requires-Dist: pymongo (>=3.0,<4.0); extra == "all" or extra == "mongodb"
+Requires-Dist: pyyaml (>=5.4)
+Requires-Dist: redis (>=3.0,<4.0); extra == "all" or extra == "redis"
+Requires-Dist: requests (>=2.17,<3.0)
+Requires-Dist: sphinx-autodoc-typehints (>=1.11,<2.0); extra == "docs"
+Requires-Dist: sphinx-copybutton (>=0.3,<0.5); extra == "docs"
+Requires-Dist: sphinx-inline-tabs (>=2021.4.11-beta.9,<2022.0.0); (python_version >= "3.8") and (extra == "docs")
+Requires-Dist: sphinxcontrib-apidoc (>=0.3,<0.4); extra == "docs"
+Requires-Dist: ujson (>=4.0); extra == "all" or extra == "json"
+Requires-Dist: url-normalize (>=1.4,<2.0)
+Project-URL: Documentation, https://requests-cache.readthedocs.io
+Project-URL: Repository, https://github.com/reclosedev/requests-cache
+Description-Content-Type: text/markdown
+
+# Requests-Cache
+[![Build](https://github.com/reclosedev/requests-cache/actions/workflows/build.yml/badge.svg)](https://github.com/reclosedev/requests-cache/actions/workflows/build.yml)
+[![Coverage](https://coveralls.io/repos/github/reclosedev/requests-cache/badge.svg?branch=master)](https://coveralls.io/github/reclosedev/requests-cache?branch=master)
+[![Documentation](https://img.shields.io/readthedocs/requests-cache/stable)](https://requests-cache.readthedocs.io/en/stable/)
+[![PyPI](https://img.shields.io/pypi/v/requests-cache?color=blue)](https://pypi.org/project/requests-cache)
+[![PyPI - Python Versions](https://img.shields.io/pypi/pyversions/requests-cache)](https://pypi.org/project/requests-cache)
+[![PyPI - Format](https://img.shields.io/pypi/format/requests-cache?color=blue)](https://pypi.org/project/requests-cache)
+[![Code Shelter](https://www.codeshelter.co/static/badges/badge-flat.svg)](https://www.codeshelter.co/)
+
+## Summary
+**requests-cache** is a transparent, persistent HTTP cache for the python [requests](http://python-requests.org)
+library. It's a convenient tool to use with web scraping, consuming REST APIs, slow or rate-limited
+sites, or any other scenario in which you're making lots of requests that are expensive and/or
+likely to be sent more than once.
+
+See full project documentation at: https://requests-cache.readthedocs.io
+
+## Features
+* **Ease of use:** Use as a [drop-in replacement](https://requests-cache.readthedocs.io/en/stable/api.html#sessions)
+  for `requests.Session`, or [install globally](https://requests-cache.readthedocs.io/en/stable/user_guide.html#patching)
+  to add caching to all `requests` functions
+* **Customization:** Works out of the box with zero config, but with plenty of options available
+  for customizing cache
+  [expiration](https://requests-cache.readthedocs.io/en/stable/user_guide.html#cache-expiration)
+  and other [behavior](https://requests-cache.readthedocs.io/en/stable/user_guide.html#cache-options)
+* **Persistence:** Includes several [storage backends](https://requests-cache.readthedocs.io/en/stable/user_guide.html#cache-backends):
+  SQLite, Redis, MongoDB, GridFS, DynamoDB, and filesystem.
+* **Compatibility:** Can be used alongside
+  [other popular libraries based on requests](https://requests-cache.readthedocs.io/en/stable/advanced_usage.html#library-compatibility)
+
+# Quickstart
+First, install with pip:
+```bash
+pip install requests-cache
+```
+
+Next, use [requests_cache.CachedSession](https://requests-cache.readthedocs.io/en/stable/api.html#sessions)
+to send and cache requests. To quickly demonstrate how to use it:
+
+**This takes ~1 minute:**
+```python
+import requests
+
+session = requests.Session()
+for i in range(60):
+    session.get('http://httpbin.org/delay/1')
+```
+
+**This takes ~1 second:**
+```python
+import requests_cache
+
+session = requests_cache.CachedSession('demo_cache')
+for i in range(60):
+    session.get('http://httpbin.org/delay/1')
+```
+
+The URL in this example adds a delay of 1 second, simulating a slow or rate-limited website.
+With caching, the response will be fetched once, saved to `demo_cache.sqlite`, and subsequent
+requests will return the cached response near-instantly.
+
+If you don't want to manage a session object, requests-cache can also be installed globally:
+```python
+requests_cache.install_cache('demo_cache')
+requests.get('http://httpbin.org/delay/1')
+```
+
+## Next Steps
+To find out more about what you can do with requests-cache, see:
+
+* The
+  [User Guide](https://requests-cache.readthedocs.io/en/stable/user_guide.html) and
+  [Advanced Usage](https://requests-cache.readthedocs.io/en/stable/advanced_usage.html) sections
+* A working example at Real Python:
+  [Caching External API Requests](https://realpython.com/blog/python/caching-external-api-requests)
+* More examples in the
+  [examples/](https://github.com/reclosedev/requests-cache/tree/master/examples) folder
+

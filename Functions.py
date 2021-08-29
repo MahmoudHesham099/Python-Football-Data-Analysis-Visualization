@@ -129,3 +129,47 @@ def pressure_map(team):
     # set the title
     ax.set_title(f'{team} Pressure')
     plt.show()
+
+
+def get_shot_df(team):
+    # boolean mask if the event is shot and team is our team
+    team_shot_mask = (event_df.type_name == 'Shot') & (event_df.team_name == team)
+    # create a dataframe of the shot only
+    shot_df = event_df[team_shot_mask]
+    # filter shots to goals & not goals
+    team_goals_shots_df = shot_df[shot_df.outcome_name == 'Goal']
+    team_not_goals_shots_df = shot_df[shot_df.outcome_name != 'Goal']
+    return team_goals_shots_df, team_not_goals_shots_df
+
+
+def shots_expected_goals(team1, team2):
+    team1_goals_shot_df, team1_not_goals_shot_df = get_shot_df(team1)
+    team2_goals_shot_df, team2_not_goals_shot_df = get_shot_df(team2)
+    # setup the pitch
+    pitch = Pitch(pitch_color='grass', line_color='white')
+    fig, ax = pitch.draw()
+    # Data is collected so the attacking direction is the right side
+    # so we will shift team1 shots to the left side
+    team1_goals_shot_df['x'] = pitch.dim.right - team1_goals_shot_df.x
+    team1_not_goals_shot_df['x'] = pitch.dim.right - team1_not_goals_shot_df.x
+    # plot team shots scatter and its size will be based on expected goals ratio (shot_statsbomb_xg * 900)
+    # Goals shot shape (marker) will be football and Not Goals will be regular circle with color
+    # Team 1
+    pitch.scatter(x=team1_goals_shot_df.x, y=team1_goals_shot_df.y, s=team1_goals_shot_df.shot_statsbomb_xg*900,
+                  edgecolor='black', ax=ax, marker='football')
+    pitch.scatter(x=team1_not_goals_shot_df.x, y=team1_not_goals_shot_df.y, s=team1_not_goals_shot_df.shot_statsbomb_xg * 900,
+                  edgecolor='black', ax=ax, color='#697cd4')
+    # Team 2
+    pitch.scatter(x=team2_goals_shot_df.x, y=team2_goals_shot_df.y, s=team2_goals_shot_df.shot_statsbomb_xg * 900,
+                  edgecolor='black', ax=ax, marker='football')
+    pitch.scatter(x=team2_not_goals_shot_df.x, y=team2_not_goals_shot_df.y,
+                  s=team2_not_goals_shot_df.shot_statsbomb_xg * 900,
+                  edgecolor='black', ax=ax, color='#ba495c')
+    # Teams Name
+    ax.text(x=20, y=70, s=f'{team1}\n\n{len(team1_goals_shot_df)}', ha='center', va='center', color='white', weight='bold')
+    ax.text(x=100, y=70, s=f'{team2}\n\n{len(team2_goals_shot_df)}', ha='center', va='center', color='white', weight='bold')
+    plt.show()
+
+
+
+

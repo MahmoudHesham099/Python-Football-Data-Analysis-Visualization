@@ -15,5 +15,8 @@ team1, team2 = Functions.get_teams_name()
 # Functions.pass_network(team2)
 
 # Pressure Map
-Functions.pressure_map(team1)
-Functions.pressure_map(team2)
+# Functions.pressure_map(team1)
+# Functions.pressure_map(team2)
+
+# Shots Expected Goals
+Functions.shots_expected_goals(team1, team2)
