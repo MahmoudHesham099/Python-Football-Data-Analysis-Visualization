@@ -171,5 +171,24 @@ def shots_expected_goals(team1, team2):
     plt.show()
 
 
+def get_player_df(player):
+    # boolean mask if the event is pass and player is our player
+    player_pass_mask = (event_df.type_name == 'Pass') & (event_df.player_name == player)
+    # create dataframe of our player passes
+    player_df = event_df[player_pass_mask]
+    return player_df
 
 
+def player_convex_hull(player):
+    player_df = get_player_df(player)
+    # setup the pitch
+    pitch = Pitch()
+    fig, ax = pitch.draw()
+    # plot convex hull
+    hull = pitch.convexhull(player_df.x, player_df.y)
+    pitch.polygon(hull, ax=ax, edgecolor='blue', facecolor='blue', alpha=0.2)
+    # plot scatter
+    pitch.scatter(x=player_df.x, y=player_df.y, ax=ax, edgecolor='black', color='blue', alpha=0.8)
+    # set the title
+    ax.set_title(f'{player} Passes Convex hull')
+    plt.show()

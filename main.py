@@ -19,4 +19,8 @@ team1, team2 = Functions.get_teams_name()
 # Functions.pressure_map(team2)
 
 # Shots Expected Goals
-Functions.shots_expected_goals(team1, team2)
+# Functions.shots_expected_goals(team1, team2)
+
+# Player Convex Hull
+Functions.player_convex_hull('Fábio Henrique Tavares')
+Functions.player_convex_hull('Harry Winks')
