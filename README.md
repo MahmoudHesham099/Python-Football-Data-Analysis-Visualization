@@ -31,3 +31,9 @@ YouTube Video Link: https://youtu.be/4b3C3aOS61Q
 YouTube Video Link: https://youtu.be/2Qsa_GRUS0A
 
 ![Alt text](result/5.jpg)
+
+## 6- Convex Hull
+
+YouTube Video Link: https://youtu.be/FArOC7w9h7I
+
+![Alt text](result/6.jpg)
